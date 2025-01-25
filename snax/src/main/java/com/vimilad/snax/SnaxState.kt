@@ -15,14 +15,14 @@ class SnaxState {
 
     fun setData(
         type: SnaxType,
-        text: String,
+        message: String,
         title: String? = null,
         actionTitle: String? = null,
         action: (() -> Unit)? = null,
     ) {
         _data.value = SnaxData(
             type = type,
-            message = text,
+            message = message,
             title = title,
             actionTitle = actionTitle,
             action = action

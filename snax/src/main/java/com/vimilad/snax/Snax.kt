@@ -99,15 +99,15 @@ fun Snax(
                         .background(
                             brush = Brush.horizontalGradient(
                                 listOf(
-                                    Color.Transparent,
-                                    Color.Transparent,
                                     when (data?.type) {
                                         SnaxType.ERROR -> ColorRed.copy(0.3f)
                                         SnaxType.INFO -> ColorPrimary.copy(0.3f)
                                         SnaxType.SUCCESS -> ColorGreen.copy(0.3f)
                                         SnaxType.WARNING -> ColorYellow.copy(0.3f)
                                         null -> ColorYellow.copy(0.3f)
-                                    }
+                                    },
+                                    Color.Transparent,
+                                    Color.Transparent,
                                 )
                             )
                         )
