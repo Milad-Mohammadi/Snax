@@ -22,7 +22,7 @@ class SnaxState {
     ) {
         _data.value = SnaxData(
             type = type,
-            text = text,
+            message = text,
             title = title,
             actionTitle = actionTitle,
             action = action

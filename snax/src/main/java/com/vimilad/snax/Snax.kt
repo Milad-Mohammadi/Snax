@@ -39,6 +39,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import java.util.Timer
@@ -57,6 +58,8 @@ fun Snax(
     animationExit: ExitTransition = fadeOut() + slideOutVertically(targetOffsetY = { it / 2 }),
     cornerRadius: Dp = 8.dp,
     backgroundColor: Color = Color(0xFF242C32),
+    titleStyle: TextStyle = MaterialTheme.typography.titleLarge,
+    messageStyle: TextStyle = MaterialTheme.typography.bodyMedium,
     duration: Long = 3000L
 ) {
     var showSnax by remember { mutableStateOf(false) }
@@ -138,14 +141,14 @@ fun Snax(
                             Text(
                                 text = title,
                                 color = ColorWhite,
-                                style = MaterialTheme.typography.titleLarge,
+                                style = titleStyle,
                             )
                         }
 
                         Text(
-                            text = data?.text.orEmpty(),
+                            text = data?.message.orEmpty(),
                             color = ColorWhite,
-                            style = MaterialTheme.typography.bodyMedium,
+                            style = messageStyle,
                         )
                     }
 
