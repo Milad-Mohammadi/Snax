@@ -3,7 +3,7 @@ package com.vimilad.snax
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
-import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
@@ -11,6 +11,7 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -27,7 +28,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -42,8 +43,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import java.util.Timer
-import kotlin.concurrent.schedule
 
 @Composable
 fun rememberSnaxState(): SnaxState {
@@ -57,28 +56,35 @@ fun Snax(
     animationEnter: EnterTransition = fadeIn() + slideInVertically(initialOffsetY = { it / 2 }),
     animationExit: ExitTransition = fadeOut() + slideOutVertically(targetOffsetY = { it / 2 }),
     cornerRadius: Dp = 8.dp,
-    backgroundColor: Color = Color(0xFF242C32),
+    progressStyle: ProgressStyle = ProgressStyle.LINEAR,
     titleStyle: TextStyle = MaterialTheme.typography.titleLarge,
     messageStyle: TextStyle = MaterialTheme.typography.bodyMedium,
+    buttonTextStyle: TextStyle = MaterialTheme.typography.labelLarge,
     duration: Long = 3000L
 ) {
     var showSnax by remember { mutableStateOf(false) }
     val data by rememberUpdatedState(newValue = state.data.value)
+    val type = data?.type
+    val backgroundColor = if (type is SnaxType.CUSTOM) type.backgroundColor else ColorBackground
+    val contentColor = if (type is SnaxType.CUSTOM) type.contentColor else ColorWhite
+    val progress = remember { Animatable(1f) }
+    val animateProgress = progressStyle == ProgressStyle.LINEAR || progressStyle == ProgressStyle.SYMMETRIC
 
-    DisposableEffect(
+    LaunchedEffect(
         key1 = state.updateState
     ) {
+        progress.stop()
+        progress.snapTo(1f)
+        showSnax = false
         if (data != null) showSnax = true
-        val timer = Timer("Animation Timer", true)
-        if (data?.action == null) {
-            timer.schedule(duration) {
-                showSnax = false
-            }
-        }
-        onDispose {
-            timer.cancel()
-            timer.purge()
-        }
+        progress.animateTo(
+            targetValue = if (animateProgress && data?.action == null) 0f else 1f,
+            animationSpec = tween(
+                durationMillis = duration.toInt(),
+                easing = LinearEasing
+            )
+        )
+        if (data?.action == null) showSnax = false
     }
 
     Column(modifier) {
@@ -99,12 +105,14 @@ fun Snax(
                         .background(
                             brush = Brush.horizontalGradient(
                                 listOf(
-                                    when (data?.type) {
+                                    when (type) {
                                         SnaxType.ERROR -> ColorRed.copy(0.3f)
                                         SnaxType.INFO -> ColorPrimary.copy(0.3f)
                                         SnaxType.SUCCESS -> ColorGreen.copy(0.3f)
                                         SnaxType.WARNING -> ColorYellow.copy(0.3f)
+                                        is SnaxType.CUSTOM -> type.overlayColor
                                         null -> ColorYellow.copy(0.3f)
+
                                     },
                                     Color.Transparent,
                                     Color.Transparent,
@@ -115,20 +123,21 @@ fun Snax(
                 ) {
                     Icon(
                         painter = painterResource(
-                            id = when (data?.type) {
+                            id = when (type) {
                                 SnaxType.ERROR -> R.drawable.ic_cross_circle_fill
                                 SnaxType.INFO -> R.drawable.ic_info_circle_fill
                                 SnaxType.SUCCESS -> R.drawable.ic_tick_circle_fill
                                 SnaxType.WARNING -> R.drawable.ic_warning_fill
+                                is SnaxType.CUSTOM -> type.icon
                                 null -> R.drawable.ic_warning_fill
                             }
                         ),
                         contentDescription = null,
-                        tint = ColorWhite,
+                        tint = contentColor,
                         modifier = Modifier
                             .size(34.dp)
                             .clip(CircleShape)
-                            .background(ColorWhite.copy(0.1f))
+                            .background(contentColor.copy(0.1f))
                             .padding(4.dp)
                     )
 
@@ -140,14 +149,14 @@ fun Snax(
                         data?.title?.let { title ->
                             Text(
                                 text = title,
-                                color = ColorWhite,
+                                color = contentColor,
                                 style = titleStyle,
                             )
                         }
 
                         Text(
                             text = data?.message.orEmpty(),
-                            color = ColorWhite,
+                            color = contentColor,
                             style = messageStyle,
                         )
                     }
@@ -161,35 +170,53 @@ fun Snax(
                         ) {
                             Text(
                                 text = data?.actionTitle.orEmpty(),
-                                color = ColorWhite
+                                color = contentColor,
+                                style = buttonTextStyle
                             )
                         }
                     }
                 }
 
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(4.dp)
-                        .animateContentSize(tween(durationMillis = duration.toInt(), easing = LinearEasing))
-                        .align(Alignment.BottomCenter)
-                        .clip(CircleShape)
-                        .background(
-                            when (data?.type) {
-                                SnaxType.ERROR -> ColorRed
-                                SnaxType.INFO -> ColorPrimary
-                                SnaxType.SUCCESS -> ColorGreen
-                                SnaxType.WARNING -> ColorYellow
-                                null -> ColorPrimary
-                            }
+                val progressColor = when (type) {
+                    SnaxType.ERROR -> ColorRed
+                    SnaxType.INFO -> ColorPrimary
+                    SnaxType.SUCCESS -> ColorGreen
+                    SnaxType.WARNING -> ColorYellow
+                    is SnaxType.CUSTOM -> type.overlayColor
+                    null -> ColorPrimary
+                }
+
+                if (progressStyle != ProgressStyle.HIDDEN) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .align(Alignment.BottomCenter),
+                        horizontalArrangement = when (progressStyle) {
+                            ProgressStyle.LINEAR -> Arrangement.Start
+                            else -> Arrangement.SpaceAround
+                        }
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth(progress.value)
+                                .height(4.dp)
+                                .clip(
+                                    RoundedCornerShape(
+                                        topStart = cornerRadius.times(3),
+                                        topEnd = cornerRadius.times(3)
+                                    )
+                                )
+                                .background(progressColor)
                         )
-                )
+                    }
+                }
             }
         }
     }
 }
 
 
+private val ColorBackground = Color(0xFF242C32)
 private val ColorPrimary = Color(0xFF1C54D4)
 private val ColorRed = Color(0xFFF04349)
 private val ColorGreen = Color(0xFF00DF80)
