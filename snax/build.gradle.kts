@@ -4,10 +4,6 @@ plugins {
     alias(libs.plugins.compose.compiler)
 }
 
-repositories {
-    maven { url = uri("https://jitpack.io") }
-}
-
 android {
     namespace = "com.vimilad.snax"
     compileSdk = 35
