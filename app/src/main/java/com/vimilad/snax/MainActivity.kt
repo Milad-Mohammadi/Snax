@@ -60,6 +60,13 @@ class MainActivity : AppCompatActivity() {
                     Pair("rectangle", "Rectangle"),
                     Pair("rounded", "Rounded"),
                 )
+                val durations = listOf(
+                    Pair("3", "3s"),
+                    Pair("5", "5s"),
+                    Pair("10", "10s"),
+                    Pair("15", "15s"),
+                    Pair("20", "20s"),
+                )
 
                 val snaxState = rememberSnaxState()
                 var showTitle by remember { mutableStateOf(false) }
@@ -68,6 +75,7 @@ class MainActivity : AppCompatActivity() {
                 var progressStyle  by remember { mutableStateOf(ProgressStyle.LINEAR) }
                 var animation  by remember { mutableStateOf(AnimationType.DEFAULT) }
                 var shape  by remember { mutableStateOf(shapes.first()) }
+                var duration  by remember { mutableStateOf(durations.first()) }
                 val action = if (actionRequired) ({}) else null
 
                 Box(
@@ -162,6 +170,19 @@ class MainActivity : AppCompatActivity() {
                                     items = shapes,
                                     currentItem = shape,
                                     onSelected = { shape = it }
+                                )
+                            }
+
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Text("Duration")
+                                ItemSelector(
+                                    items = durations,
+                                    currentItem = duration,
+                                    onSelected = { duration = it }
                                 )
                             }
                         }
@@ -302,7 +323,8 @@ class MainActivity : AppCompatActivity() {
                                 shrinkTowards = Alignment.Top,
                                 animationSpec = spring(stiffness = Spring.StiffnessLow)
                             ) + fadeOut()
-                        }
+                        },
+                        duration = duration.first.toInt().times(1000).toLong()
                     )
                 }
             }
