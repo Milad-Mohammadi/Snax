@@ -258,6 +258,7 @@ class MainActivity : AppCompatActivity() {
                         state = snaxState,
                         modifier = Modifier.align(Alignment.BottomCenter),
                         progressStyle = progressStyle,
+                        dismissBehavior = if (isDismissable) DismissBehavior.SWIPE_HORIZONTAL else DismissBehavior.NOT_DISMISSABLE,
                         shape = when(shape) {
                             shapes[0] -> RoundedCornerShape(8.dp)
                             shapes[1] -> CircleShape

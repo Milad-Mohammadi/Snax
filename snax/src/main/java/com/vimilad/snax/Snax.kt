@@ -25,13 +25,17 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SwipeToDismissBox
+import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -43,6 +47,8 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @Composable
 fun rememberSnaxState(): SnaxState {
@@ -57,6 +63,7 @@ fun Snax(
     animationExit: ExitTransition = fadeOut() + slideOutVertically(targetOffsetY = { it / 2 }),
     shape: Shape = RoundedCornerShape(8.dp),
     progressStyle: ProgressStyle = ProgressStyle.LINEAR,
+    dismissBehavior: DismissBehavior = DismissBehavior.NOT_DISMISSABLE,
     titleStyle: TextStyle = MaterialTheme.typography.titleLarge,
     messageStyle: TextStyle = MaterialTheme.typography.bodyMedium,
     buttonTextStyle: TextStyle = MaterialTheme.typography.labelLarge,
@@ -69,25 +76,50 @@ fun Snax(
     val contentColor = if (type is SnaxType.CUSTOM) type.contentColor else ColorWhite
     val progress = remember { Animatable(1f) }
     val animateProgress = progressStyle == ProgressStyle.LINEAR || progressStyle == ProgressStyle.SYMMETRIC
+    val scope = rememberCoroutineScope()
 
-    LaunchedEffect(
-        key1 = state.updateState
-    ) {
+    val dismissState = rememberSwipeToDismissBoxState(
+        confirmValueChange = { newValue ->
+            when (newValue) {
+                SwipeToDismissBoxValue.StartToEnd, SwipeToDismissBoxValue.EndToStart -> {
+                    showSnax = false
+                }
+                else -> false
+            }
+            true
+        },
+        positionalThreshold = { it * 0.25f }
+    )
+
+    LaunchedEffect(state.updateState) {
         progress.stop()
         progress.snapTo(1f)
         showSnax = false
-        if (data != null) showSnax = true
-        progress.animateTo(
-            targetValue = if (animateProgress && data?.action == null) 0f else 1f,
-            animationSpec = tween(
-                durationMillis = duration.toInt(),
-                easing = LinearEasing
+        if (data != null) {
+            showSnax = true
+            progress.animateTo(
+                targetValue = if (animateProgress && data?.action == null) 0f else 1f,
+                animationSpec = tween(durationMillis = duration.toInt(), easing = LinearEasing)
             )
-        )
-        if (data?.action == null) showSnax = false
+            if (data?.action == null) showSnax = false
+        }
     }
 
-    Column(modifier) {
+    LaunchedEffect(showSnax) {
+        if (!showSnax) {
+            scope.launch {
+                delay(500)
+                dismissState.reset()
+            }
+        }
+    }
+
+    SwipeToDismissBox(
+        state = dismissState,
+        modifier = modifier,
+        gesturesEnabled = dismissBehavior == DismissBehavior.SWIPE_HORIZONTAL,
+        backgroundContent = { },
+    ) {
         AnimatedVisibility(
             visible = showSnax,
             enter = animationEnter,
