@@ -214,7 +214,7 @@ fun Snax(
                     SnaxType.INFO -> ColorPrimary
                     SnaxType.SUCCESS -> ColorGreen
                     SnaxType.WARNING -> ColorYellow
-                    is SnaxType.CUSTOM -> type.overlayColor
+                    is SnaxType.CUSTOM -> type.progressColor ?: type.overlayColor
                     null -> ColorPrimary
                 }
 

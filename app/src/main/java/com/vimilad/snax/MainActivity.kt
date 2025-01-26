@@ -252,6 +252,28 @@ class MainActivity : AppCompatActivity() {
                                 Text(text = "Custom")
                             }
                         )
+
+                        Button(
+                            modifier = Modifier.fillMaxWidth(),
+                            onClick = {
+                                snaxState.setData(
+                                    type = SnaxType.CUSTOM(
+                                        icon = R.drawable.vimilad_logo,
+                                        backgroundColor =  Color(0xFFE1E1E1),
+                                        overlayColor = Color(0xFFE1E1E1),
+                                        contentColor = Color(0xFF0E0E0E),
+                                        progressColor = Color(0xFF0E0E0E)
+                                    ),
+                                    title = if (showTitle) "Vimilad.com" else null,
+                                    message = "Check my website for more projects.",
+                                    actionTitle = "Visit",
+                                    action = action
+                                )
+                            },
+                            content = {
+                                Text(text = "Custom 2")
+                            }
+                        )
                     }
 
                     Snax(

@@ -12,6 +12,7 @@ sealed class SnaxType {
         val icon: Int,
         val backgroundColor: Color,
         val overlayColor: Color,
-        val contentColor: Color
+        val contentColor: Color,
+        val progressColor: Color? = null,
     ) : SnaxType()
 }
