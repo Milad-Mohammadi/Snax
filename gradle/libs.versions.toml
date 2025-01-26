@@ -1,6 +1,6 @@
 [versions]
 activityCompose = "1.8.2"
-agp = "8.7.3"
+agp = "7.4.2"
 kotlin = "2.0.0"
 coreKtx = "1.15.0"
 junit = "4.13.2"
