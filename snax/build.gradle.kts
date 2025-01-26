@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.compose.compiler)
+    id("maven-publish")
 }
 
 android {
@@ -45,4 +46,15 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+}
+
+publishing {
+    publications {
+        create<MavenPublication>("release") {
+            groupId = "com.vimilad"
+            artifactId = "snax"
+            version = "1.0.0"
+            artifact("${layout.buildDirectory}/outputs/aar/snax-release.aar")
+        }
+    }
 }
