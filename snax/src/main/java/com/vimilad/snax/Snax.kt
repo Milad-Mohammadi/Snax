@@ -50,11 +50,30 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
+/**
+ * Remembers the state for managing a Snax snack bar.
+ * @return A new or existing [SnaxState].
+ */
 @Composable
 fun rememberSnaxState(): SnaxState {
     return remember { SnaxState() }
 }
 
+/**
+ * Composable function to display a customizable snack bar using Snax.
+ *
+ * @param state The [SnaxState] managing the snack bar's data.
+ * @param modifier Modifier for styling.
+ * @param animationEnter The enter animation for the snack bar.
+ * @param animationExit The exit animation for the snack bar.
+ * @param shape The shape of the snack bar.
+ * @param progressStyle The style of the progress indicator.
+ * @param dismissBehavior The behavior for dismissing the snack bar.
+ * @param titleStyle The text style for the title.
+ * @param messageStyle The text style for the message.
+ * @param buttonTextStyle The text style for the button text.
+ * @param duration The duration the snack bar remains visible.
+ */
 @Composable
 fun Snax(
     state: SnaxState,
@@ -80,11 +99,8 @@ fun Snax(
 
     val dismissState = rememberSwipeToDismissBoxState(
         confirmValueChange = { newValue ->
-            when (newValue) {
-                SwipeToDismissBoxValue.StartToEnd, SwipeToDismissBoxValue.EndToStart -> {
-                    showSnax = false
-                }
-                else -> false
+            if (newValue == SwipeToDismissBoxValue.StartToEnd || newValue == SwipeToDismissBoxValue.EndToStart) {
+                showSnax = false
             }
             true
         },
@@ -118,7 +134,7 @@ fun Snax(
         state = dismissState,
         modifier = modifier,
         gesturesEnabled = dismissBehavior == DismissBehavior.SWIPE_HORIZONTAL,
-        backgroundContent = { },
+        backgroundContent = {},
     ) {
         AnimatedVisibility(
             visible = showSnax,
@@ -144,7 +160,6 @@ fun Snax(
                                         SnaxType.WARNING -> ColorYellow.copy(0.3f)
                                         is SnaxType.CUSTOM -> type.overlayColor
                                         null -> ColorYellow.copy(0.3f)
-
                                     },
                                     Color.Transparent,
                                     Color.Transparent,
@@ -241,7 +256,7 @@ fun Snax(
     }
 }
 
-
+// Predefined color constants for the Snax snack bar.
 private val ColorBackground = Color(0xFF242C32)
 private val ColorPrimary = Color(0xFF1C54D4)
 private val ColorRed = Color(0xFFF04349)
