@@ -39,9 +39,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -55,7 +55,7 @@ fun Snax(
     modifier: Modifier = Modifier,
     animationEnter: EnterTransition = fadeIn() + slideInVertically(initialOffsetY = { it / 2 }),
     animationExit: ExitTransition = fadeOut() + slideOutVertically(targetOffsetY = { it / 2 }),
-    cornerRadius: Dp = 8.dp,
+    shape: Shape = RoundedCornerShape(8.dp),
     progressStyle: ProgressStyle = ProgressStyle.LINEAR,
     titleStyle: TextStyle = MaterialTheme.typography.titleLarge,
     messageStyle: TextStyle = MaterialTheme.typography.bodyMedium,
@@ -95,13 +95,13 @@ fun Snax(
         ) {
             Box(
                 modifier = Modifier
-                    .clip(RoundedCornerShape(cornerRadius))
+                    .clip(shape)
                     .background(color = backgroundColor)
             ) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
-                        .clip(shape = RoundedCornerShape(cornerRadius))
+                        .clip(shape = shape)
                         .background(
                             brush = Brush.horizontalGradient(
                                 listOf(
@@ -200,12 +200,6 @@ fun Snax(
                             modifier = Modifier
                                 .fillMaxWidth(progress.value)
                                 .height(4.dp)
-                                .clip(
-                                    RoundedCornerShape(
-                                        topStart = cornerRadius.times(3),
-                                        topEnd = cornerRadius.times(3)
-                                    )
-                                )
                                 .background(progressColor)
                         )
                     }

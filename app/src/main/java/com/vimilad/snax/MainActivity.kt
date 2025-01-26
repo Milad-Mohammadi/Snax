@@ -25,6 +25,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
@@ -42,6 +43,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.dp
 
 
@@ -52,12 +54,20 @@ class MainActivity : AppCompatActivity() {
 
         setContent {
             MaterialTheme {
+                val shapes = listOf(
+                    Pair("default", "default"),
+                    Pair("circle", "circle"),
+                    Pair("rectangle", "rectangle"),
+                    Pair("rounded", "rounded"),
+                )
+
                 val snaxState = rememberSnaxState()
                 var showTitle by remember { mutableStateOf(false) }
                 var actionRequired by remember { mutableStateOf(false) }
                 var isDismissable  by remember { mutableStateOf(false) }
                 var progressStyle  by remember { mutableStateOf(ProgressStyle.LINEAR) }
                 var animation  by remember { mutableStateOf(AnimationType.DEFAULT) }
+                var shape  by remember { mutableStateOf(shapes.first()) }
                 val action = if (actionRequired) ({}) else null
 
                 Box(
@@ -122,9 +132,10 @@ class MainActivity : AppCompatActivity() {
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 Text("Progress Style")
-                                ProgressStyleSelector(
-                                    currentStyle = progressStyle,
-                                    onStyleSelected = { progressStyle = it }
+                                ItemSelector(
+                                    items = ProgressStyle.entries.map { Pair(it.name, it.name) },
+                                    currentItem = Pair(progressStyle.name, progressStyle.name),
+                                    onSelected = { progressStyle = ProgressStyle.valueOf(it.first) }
                                 )
                             }
 
@@ -134,9 +145,23 @@ class MainActivity : AppCompatActivity() {
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 Text("Animation Type")
-                                AnimationSelector(
-                                    currentAnimation = animation,
-                                    onAnimationSelected = { animation = it }
+                                ItemSelector(
+                                    items = AnimationType.entries.map { Pair(it.name, it.title) },
+                                    currentItem = Pair(animation.name, animation.title),
+                                    onSelected = { animation = AnimationType.valueOf(it.first) }
+                                )
+                            }
+
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Text("Shape")
+                                ItemSelector(
+                                    items = shapes,
+                                    currentItem = shape,
+                                    onSelected = { shape = it }
                                 )
                             }
                         }
@@ -233,6 +258,12 @@ class MainActivity : AppCompatActivity() {
                         state = snaxState,
                         modifier = Modifier.align(Alignment.BottomCenter),
                         progressStyle = progressStyle,
+                        shape = when(shape) {
+                            shapes[0] -> RoundedCornerShape(8.dp)
+                            shapes[1] -> CircleShape
+                            shapes[2] -> RectangleShape
+                            else -> RoundedCornerShape(20.dp)
+                        },
                         animationEnter = when (animation) {
                             AnimationType.DEFAULT -> fadeIn() + slideInVertically(initialOffsetY = { it / 2 })
                             AnimationType.SLIDE_SCALE -> slideInVertically(initialOffsetY = { it }) + scaleIn(initialScale = 0.8f)
@@ -257,9 +288,10 @@ class MainActivity : AppCompatActivity() {
 }
 
 @Composable
-fun ProgressStyleSelector(
-    currentStyle: ProgressStyle,
-    onStyleSelected: (ProgressStyle) -> Unit
+fun ItemSelector(
+    items: List<Pair<String, String>>,
+    currentItem: Pair<String, String>,
+    onSelected: (Pair<String, String>) -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
     Box(
@@ -267,47 +299,17 @@ fun ProgressStyleSelector(
             .wrapContentSize(Alignment.TopStart)
     ) {
         TextButton(onClick = { expanded = true }) {
-            Text(text = currentStyle.name, style = MaterialTheme.typography.bodyMedium)
+            Text(text = currentItem.second, style = MaterialTheme.typography.bodyMedium)
         }
         DropdownMenu(
             expanded = expanded,
             onDismissRequest = { expanded = false }
         ) {
-            ProgressStyle.entries.forEach { style ->
+            items.forEach { item ->
                 DropdownMenuItem(
-                    text = { Text(style.name, style = MaterialTheme.typography.bodyMedium) },
+                    text = { Text(item.second, style = MaterialTheme.typography.bodyMedium) },
                     onClick = {
-                        onStyleSelected(style)
-                        expanded = false
-                    }
-                )
-            }
-        }
-    }
-}
-
-@Composable
-fun AnimationSelector(
-    currentAnimation: AnimationType,
-    onAnimationSelected: (AnimationType) -> Unit
-) {
-    var expanded by remember { mutableStateOf(false) }
-    Box(
-        modifier = Modifier
-            .wrapContentSize(Alignment.TopStart)
-    ) {
-        TextButton(onClick = { expanded = true }) {
-            Text(text = currentAnimation.title, style = MaterialTheme.typography.bodyMedium)
-        }
-        DropdownMenu(
-            expanded = expanded,
-            onDismissRequest = { expanded = false }
-        ) {
-            AnimationType.entries.forEach { animation ->
-                DropdownMenuItem(
-                    text = { Text(animation.title, style = MaterialTheme.typography.bodyMedium) },
-                    onClick = {
-                        onAnimationSelected(animation)
+                        onSelected(item)
                         expanded = false
                     }
                 )
