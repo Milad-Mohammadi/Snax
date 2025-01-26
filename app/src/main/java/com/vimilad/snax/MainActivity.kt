@@ -55,10 +55,10 @@ class MainActivity : AppCompatActivity() {
         setContent {
             MaterialTheme {
                 val shapes = listOf(
-                    Pair("default", "default"),
-                    Pair("circle", "circle"),
-                    Pair("rectangle", "rectangle"),
-                    Pair("rounded", "rounded"),
+                    Pair("default", "Default"),
+                    Pair("circle", "Circle"),
+                    Pair("rectangle", "Rectangle"),
+                    Pair("rounded", "Rounded"),
                 )
 
                 val snaxState = rememberSnaxState()
