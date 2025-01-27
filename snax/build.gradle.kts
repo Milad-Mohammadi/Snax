@@ -50,8 +50,8 @@ dependencies {
 publishing {
     publications {
         create<MavenPublication>("release") {
-            groupId = "com.vimilad"
-            artifactId = "snax"
+            groupId = "com.github.Milad-Mohammadi"
+            artifactId = "Snax"
             version = "1.0.0"
         }
     }
