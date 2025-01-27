@@ -10,7 +10,7 @@ android {
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.vimilad.snax"
+        applicationId = "com.vimilad.snax.demo"
         minSdk = 24
         targetSdk = 35
         versionCode = 1

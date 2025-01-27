@@ -11,7 +11,6 @@ android {
 
     defaultConfig {
         minSdk = 24
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
     }
@@ -54,7 +53,6 @@ publishing {
             groupId = "com.vimilad"
             artifactId = "snax"
             version = "1.0.0"
-            artifact("${layout.buildDirectory}/outputs/aar/snax-release.aar")
         }
     }
 }
