@@ -1,8 +1,10 @@
+import com.vanniktech.maven.publish.SonatypeHost
+
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.compose.compiler)
-    id("maven-publish")
+    id("com.vanniktech.maven.publish") version "0.28.0"
 }
 
 android {
@@ -33,6 +35,8 @@ android {
     kotlinOptions {
         jvmTarget = "11"
     }
+
+    //publishLibraryVarients("release")
 }
 
 dependencies {
@@ -47,12 +51,42 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
 }
 
-publishing {
-    publications {
-        create<MavenPublication>("release") {
-            groupId = "com.github.Milad-Mohammadi"
-            artifactId = "Snax"
-            version = "1.0.0"
+mavenPublishing {
+    coordinates(
+        groupId = "com.vimilad",
+        artifactId = "Snax",
+        version = "1.0.0"
+    )
+
+    pom {
+        name.set("Snax")
+        description.set("A custom snack bar library for Android")
+        inceptionYear.set("2025")
+        url.set("https://github.com/Milad-Mohammadi/snax")
+
+        licenses {
+            license {
+                name.set("Apache License, Version 2.0")
+                url.set("https://opensource.org/licenses/Apache-2.0")
+            }
+        }
+
+        developers {
+            developer {
+                id.set("vimilad")
+                name.set("Milad Mohammadi")
+                email.set("Mohammadi.Dev@gmail.com")
+            }
+        }
+
+        scm {
+            url.set("https://github.com/Milad-Mohammadi/snax")
         }
     }
+
+    publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)
+
+    signAllPublications()
 }
+
+task("testClasses") {}
