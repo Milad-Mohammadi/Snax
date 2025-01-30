@@ -17,6 +17,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -35,6 +37,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -44,6 +47,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.vimilad.snax.DismissBehavior
 import com.vimilad.snax.ProgressStyle
@@ -52,9 +60,15 @@ import com.vimilad.snax.Snax
 import com.vimilad.snax.SnaxType
 import com.vimilad.snax.rememberSnaxState
 
+val vazirmatnFontFamily = FontFamily(
+    Font(R.font.vazirmatn_bold, FontWeight.Bold),
+    Font(R.font.vazirmatn_regular, FontWeight.Normal),
+    Font(R.font.vazirmatn_medium, FontWeight.Medium),
+)
 
 class MainActivity : AppCompatActivity() {
 
+    @OptIn(ExperimentalLayoutApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -77,12 +91,13 @@ class MainActivity : AppCompatActivity() {
                 val snaxState = rememberSnaxState()
                 var showTitle by remember { mutableStateOf(false) }
                 var actionRequired by remember { mutableStateOf(false) }
-                var isDismissable  by remember { mutableStateOf(false) }
-                var progressStyle  by remember { mutableStateOf(ProgressStyle.LINEAR) }
-                var animation  by remember { mutableStateOf(AnimationType.DEFAULT) }
-                var shape  by remember { mutableStateOf(shapes.first()) }
+                var isDismissable by remember { mutableStateOf(false) }
+                var progressStyle by remember { mutableStateOf(ProgressStyle.LINEAR) }
+                var animation by remember { mutableStateOf(AnimationType.DEFAULT) }
+                var shape by remember { mutableStateOf(shapes.first()) }
                 var duration  by remember { mutableStateOf(durations.first()) }
                 val action = if (actionRequired) ({}) else null
+                var rtl by remember { mutableStateOf(false) }
 
                 Box(
                     modifier = Modifier
@@ -195,143 +210,171 @@ class MainActivity : AppCompatActivity() {
 
                         Spacer(modifier = Modifier.height(16.dp))
 
-                        Button(
+                        FlowRow(
                             modifier = Modifier.fillMaxWidth(),
-                            onClick = {
-                                snaxState.setData(
-                                    type = SnaxType.SUCCESS,
-                                    title = if (showTitle) "Order Confirmed" else null,
-                                    message = "Your order was placed successfully. A confirmation email is on its way.",
-                                    actionTitle = "Ok",
-                                    action = action
-                                )
-                            },
-                            content = {
-                                Text(text = "Success")
-                            }
-                        )
+                            horizontalArrangement = Arrangement.spacedBy(4.dp),
+                            maxItemsInEachRow = 2
+                        ) {
+                            Button(
+                                modifier = Modifier.weight(1f),
+                                onClick = {
+                                    rtl = false
+                                    snaxState.setData(
+                                        type = SnaxType.SUCCESS,
+                                        title = if (showTitle) "Order Confirmed" else null,
+                                        message = "Your order was placed successfully. A confirmation email is on its way.",
+                                        actionTitle = "Ok",
+                                        action = action
+                                    )
+                                },
+                                content = {
+                                    Text(text = "Success")
+                                }
+                            )
 
-                        Button(
-                            modifier = Modifier.fillMaxWidth(),
-                            onClick = {
-                                snaxState.setData(
-                                    type = SnaxType.ERROR,
-                                    title = if (showTitle) "Payment Failed" else null,
-                                    message = "Payment failed. Please try again or contact support.",
-                                    actionTitle = "Support",
-                                    action = action
-                                )
-                            },
-                            content = {
-                                Text(text = "Error")
-                            }
-                        )
+                            Button(
+                                modifier = Modifier.weight(1f),
+                                onClick = {
+                                    rtl = false
+                                    snaxState.setData(
+                                        type = SnaxType.ERROR,
+                                        title = if (showTitle) "Payment Failed" else null,
+                                        message = "Payment failed. Please try again or contact support.",
+                                        actionTitle = "Support",
+                                        action = action
+                                    )
+                                },
+                                content = {
+                                    Text(text = "Error")
+                                }
+                            )
 
-                        Button(
-                            modifier = Modifier.fillMaxWidth(),
-                            onClick = {
-                                snaxState.setData(
-                                    type = SnaxType.WARNING,
-                                    title = if (showTitle) "Low Storage" else null,
-                                    message = "Your device is low on storage. Free up space for better performance.",
-                                    actionTitle = "Settings",
-                                    action = action
-                                )
-                            },
-                            content = {
-                                Text(text = "Warning")
-                            }
-                        )
+                            Button(
+                                modifier = Modifier.weight(1f),
+                                onClick = {
+                                    rtl = false
+                                    snaxState.setData(
+                                        type = SnaxType.WARNING,
+                                        title = if (showTitle) "Low Storage" else null,
+                                        message = "Your device is low on storage. Free up space for better performance.",
+                                        actionTitle = "Settings",
+                                        action = action
+                                    )
+                                },
+                                content = {
+                                    Text(text = "Warning")
+                                }
+                            )
 
-                        Button(
-                            modifier = Modifier.fillMaxWidth(),
-                            onClick = {
-                                snaxState.setData(
-                                    type = SnaxType.INFO,
-                                    title = if (showTitle) "New Update Available" else null,
-                                    message = "A new app update is available. Please update to enjoy new features.",
-                                    actionTitle = "Update",
-                                    action = action
-                                )
-                            },
-                            content = {
-                                Text(text = "Info")
-                            }
-                        )
+                            Button(
+                                modifier = Modifier.weight(1f),
+                                onClick = {
+                                    rtl = false
+                                    snaxState.setData(
+                                        type = SnaxType.INFO,
+                                        title = if (showTitle) "New Update Available" else null,
+                                        message = "A new app update is available. Please update to enjoy new features.",
+                                        actionTitle = "Update",
+                                        action = action
+                                    )
+                                },
+                                content = {
+                                    Text(text = "Info")
+                                }
+                            )
 
-                        Button(
-                            modifier = Modifier.fillMaxWidth(),
-                            onClick = {
-                                snaxState.setData(
-                                    type = SnaxType.CUSTOM(
-                                        icon = R.drawable.vimilad_logo,
-                                        backgroundColor =  Color(0XFFB28D8D),
-                                        overlayColor = Color(0XFF613DC1),
-                                        contentColor = Color(0XFF222222)
-                                    ),
-                                    title = if (showTitle) "Vimilad.com" else null,
-                                    message = "Check my website for more projects.",
-                                    actionTitle = "Visit",
-                                    action = action
-                                )
-                            },
-                            content = {
-                                Text(text = "Custom")
-                            }
-                        )
+                            Button(
+                                modifier = Modifier.weight(1f),
+                                onClick = {
+                                    rtl = false
+                                    snaxState.setData(
+                                        type = SnaxType.CUSTOM(
+                                            icon = R.drawable.vimilad_logo,
+                                            backgroundColor =  Color(0XFFB28D8D),
+                                            overlayColor = Color(0XFF613DC1),
+                                            contentColor = Color(0xFFE1E1E1)
+                                        ),
+                                        title = if (showTitle) "Vimilad.com" else null,
+                                        message = "Check my website for more projects.",
+                                        actionTitle = "Visit",
+                                        action = action
+                                    )
+                                },
+                                content = {
+                                    Text(text = "Custom")
+                                }
+                            )
 
-                        Button(
-                            modifier = Modifier.fillMaxWidth(),
-                            onClick = {
-                                snaxState.setData(
-                                    type = SnaxType.CUSTOM(
-                                        icon = R.drawable.vimilad_logo,
-                                        backgroundColor =  Color(0xFFE1E1E1),
-                                        overlayColor = Color(0xFFE1E1E1),
-                                        contentColor = Color(0xFF0E0E0E),
-                                        progressColor = Color(0xFF0E0E0E)
-                                    ),
-                                    title = if (showTitle) "Vimilad.com" else null,
-                                    message = "Check my website for more projects.",
-                                    actionTitle = "Visit",
-                                    action = action
-                                )
+                            Button(
+                                modifier = Modifier.weight(1f),
+                                onClick = {
+                                    rtl = true
+                                    snaxState.setData(
+                                        type = SnaxType.CUSTOM(
+                                            icon = R.drawable.ic_backup,
+                                            backgroundColor =  Color(0xFFE1E1E1),
+                                            overlayColor = Color(0xFFE1E1E1),
+                                            contentColor = Color(0xFF0E0E0E),
+                                            progressColor = Color(0xFF0E0E0E)
+                                        ),
+                                        title = if (showTitle) "پشتیبان\u200Cگیری" else null,
+                                        message = "برای جلوگیری از از\u200Cدست\u200Cرفتن داده\u200Cها، پشتیبان\u200Cگیری را به\u200Cصورت منظم انجام دهید.",
+                                        actionTitle = "پشتیبان\u200Cگیری",
+                                        action = action
+                                    )
+                                },
+                                content = {
+                                    Text(text = "Custom 2")
+                                }
+                            )
+                        }
+                        }
+
+                    CompositionLocalProvider(
+                        LocalLayoutDirection provides if (rtl) LayoutDirection.Rtl else LayoutDirection.Ltr
+                    ) {
+                        Snax(
+                            state = snaxState,
+                            modifier = Modifier.align(Alignment.BottomCenter),
+                            progressStyle = progressStyle,
+                            dismissBehavior = if (isDismissable) DismissBehavior.SWIPE_HORIZONTAL else DismissBehavior.NOT_DISMISSABLE,
+                            shape = when(shape) {
+                                shapes[0] -> RoundedCornerShape(8.dp)
+                                shapes[1] -> CircleShape
+                                shapes[2] -> RectangleShape
+                                else -> RoundedCornerShape(20.dp)
                             },
-                            content = {
-                                Text(text = "Custom 2")
-                            }
+                            animationEnter = when (animation) {
+                                AnimationType.DEFAULT -> fadeIn() + slideInVertically(initialOffsetY = { it / 2 })
+                                AnimationType.SLIDE_SCALE -> slideInVertically(initialOffsetY = { it }) + scaleIn(initialScale = 0.8f)
+                                AnimationType.EXPAND_CONTRACT -> expandVertically(
+                                    expandFrom = Alignment.Top,
+                                    animationSpec = spring(stiffness = Spring.StiffnessMedium)
+                                ) + fadeIn()
+                            },
+                            animationExit = when (animation) {
+                                AnimationType.DEFAULT -> fadeOut() + slideOutVertically(targetOffsetY = { it / 2 })
+                                AnimationType.SLIDE_SCALE -> slideOutVertically(targetOffsetY = { it }) + scaleOut(targetScale = 0.8f)
+                                AnimationType.EXPAND_CONTRACT -> shrinkVertically(
+                                    shrinkTowards = Alignment.Top,
+                                    animationSpec = spring(stiffness = Spring.StiffnessLow)
+                                ) + fadeOut()
+                            },
+                            duration = duration.first.toInt().times(1000).toLong(),
+                            titleStyle = MaterialTheme
+                                .typography
+                                .titleLarge
+                                .copy(fontFamily = vazirmatnFontFamily, fontWeight = FontWeight.Bold),
+                            messageStyle = MaterialTheme
+                                .typography
+                                .bodyMedium
+                                .copy(fontFamily = vazirmatnFontFamily, fontWeight = FontWeight.Normal),
+                            buttonTextStyle = MaterialTheme
+                                .typography
+                                .labelLarge
+                                .copy(fontFamily = vazirmatnFontFamily, fontWeight = FontWeight.Medium)
                         )
                     }
-
-                    Snax(
-                        state = snaxState,
-                        modifier = Modifier.align(Alignment.BottomCenter),
-                        progressStyle = progressStyle,
-                        dismissBehavior = if (isDismissable) DismissBehavior.SWIPE_HORIZONTAL else DismissBehavior.NOT_DISMISSABLE,
-                        shape = when(shape) {
-                            shapes[0] -> RoundedCornerShape(8.dp)
-                            shapes[1] -> CircleShape
-                            shapes[2] -> RectangleShape
-                            else -> RoundedCornerShape(20.dp)
-                        },
-                        animationEnter = when (animation) {
-                            AnimationType.DEFAULT -> fadeIn() + slideInVertically(initialOffsetY = { it / 2 })
-                            AnimationType.SLIDE_SCALE -> slideInVertically(initialOffsetY = { it }) + scaleIn(initialScale = 0.8f)
-                            AnimationType.EXPAND_CONTRACT -> expandVertically(
-                                expandFrom = Alignment.Top,
-                                animationSpec = spring(stiffness = Spring.StiffnessMedium)
-                            ) + fadeIn()
-                        },
-                        animationExit = when (animation) {
-                            AnimationType.DEFAULT -> fadeOut() + slideOutVertically(targetOffsetY = { it / 2 })
-                            AnimationType.SLIDE_SCALE -> slideOutVertically(targetOffsetY = { it }) + scaleOut(targetScale = 0.8f)
-                            AnimationType.EXPAND_CONTRACT -> shrinkVertically(
-                                shrinkTowards = Alignment.Top,
-                                animationSpec = spring(stiffness = Spring.StiffnessLow)
-                            ) + fadeOut()
-                        },
-                        duration = duration.first.toInt().times(1000).toLong()
-                    )
                 }
             }
         }
