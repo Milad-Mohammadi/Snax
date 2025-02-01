@@ -97,9 +97,14 @@ This project is licensed under the Apache License 2.0. See the [LICENSE](LICENSE
 ‌‌
 ## 🤝 Contributions
 Contributions, issues, and feature requests are welcome! Feel free to check the [issues](https://github.com/Milad-Mohammadi/Snax/issues) page and submit pull requests.
-
-‌‌
+‌
 ‌‌
 ‌‌
 ## 📬 Contact
 For any inquiries, feel free to reach out via Mohammadi.Dev@gmail.com.
+
+‌‌
+‌‌
+‌‌
+## ©️ Credit
+This library is inspired by the [Animated Toast - Fully Editable design on Figma](https://www.figma.com/community/file/1276793899870578167/animated-toast-fully-editable),
