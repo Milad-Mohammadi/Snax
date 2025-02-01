@@ -35,32 +35,23 @@ android {
     kotlinOptions {
         jvmTarget = "11"
     }
-
-    //publishLibraryVarients("release")
 }
 
 dependencies {
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.appcompat)
-    implementation(libs.material)
     implementation(libs.androidx.ui)
     implementation(libs.androidx.material3)
-    implementation(libs.androidx.lifecycle.runtime.compose)
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
 }
 
 mavenPublishing {
     coordinates(
         groupId = "com.vimilad",
         artifactId = "Snax",
-        version = "1.0.0"
+        version = "1.0.1"
     )
 
     pom {
         name.set("Snax")
-        description.set("A custom snack bar library for Android")
+        description.set("A custom Snackbar library for Android")
         inceptionYear.set("2025")
         url.set("https://github.com/Milad-Mohammadi/snax")
 
