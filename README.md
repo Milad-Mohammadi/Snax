@@ -11,9 +11,14 @@ Snax is a powerful and customizable Android Snackbar library built with Jetpack 
 - 🎉 No `SnackbarHostState` is Needed, Place Snax easily in a `Box`
 
 ### Demo
-| Action | Title | Dissmisable | Progress | Animation | Shape | Types |
-|---|---|---|---|---|---|---|
-| ![Action](static/action.gif) | ![Title](static/title.gif) | ![Dissmisable](static/dissmisable.gif) | ![Progress](static/progress.gif) | ![Animation](static/animation.gif) | ![Shape](static/shape.gif) | ![Types](static/types.gif) |
+| Action | Title | Dismissable | Progress |
+|--------|-------|------------|----------|
+| <img src="static/action.gif" width="200"/> | <img src="static/title.gif" width="200"/> | <img src="static/dissmisable.gif" width="200"/> | <img src="static/progress.gif" width="200"/> |
+
+| Animation | Shape | Types |
+|-----------|-------|-------|
+| <img src="static/animation.gif" width="200"/> | <img src="static/shape.gif" width="200"/> | <img src="static/types.gif" width="200"/> |
+
 
 ‌‌
 ‌‌
@@ -158,7 +163,7 @@ snaxState.setData(
 
 | Option | Description |
 |--------|-------------|
-| `LINEAR` | Progress bar decreasing from right to left. |
+| `LINEAR` | Progress bar decreasing from end to start. |
 | `SYMMETRIC` | Progress bar is decreasing on both sides. |
 | `STATIC` | No animation. |
 | `HIDDEN` | No progress indicator. |
