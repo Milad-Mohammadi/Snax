@@ -13,13 +13,42 @@ Unlike the default Jetpack Compose `Snackbar`, Snax offers:
 
 
 ### Demo
-| Action | Title | Dismissable | Progress |
-|--------|-------|------------|----------|
-| <img src="static/action.gif" width="220"/> | <img src="static/title.gif" width="220"/> | <img src="static/dismissable.gif" width="220"/> | <img src="static/progress.gif" width="220"/> |
+<table>
+  <thead>
+    <tr>
+      <th>Action</th>
+      <th>Title</th>
+      <th>Dismissable</th>
+      <th>Progress</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr style="height: 150px;">
+      <td><img src="static/action.gif" style="height: 400px; width: auto;" /></td>
+      <td><img src="static/title.gif" style="height: 400px; width: auto;" /></td>
+      <td><img src="static/dismissable.gif" style="height: 400px; width: auto;" /></td>
+      <td><img src="static/progress.gif" style="height: 400px; width: auto;" /></td>
+    </tr>
+  </tbody>
+</table>
 
-| Animation | Shape | Types |
-|-----------|-------|-------|
-| <img src="static/animation.gif" width="220"/> | <img src="static/shape.gif" width="220"/> | <img src="static/types.gif" width="220"/> |
+<table>
+  <thead>
+    <tr>
+      <th>Animation</th>
+      <th>Shape</th>
+      <th>Types</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr style="height: 150px;">
+      <td><img src="static/animation.gif" style="height: 400px; width: auto;" /></td>
+      <td><img src="static/shape.gif" style="height: 400px; width: auto;" /></td>
+      <td><img src="static/types.gif" style="height: 400px; width: auto;" /></td>
+    </tr>
+  </tbody>
+</table>
+
 
 
 ‌‌
