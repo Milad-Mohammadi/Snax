@@ -2,22 +2,24 @@
 ![banner](https://github.com/user-attachments/assets/01329c82-8f4a-445c-b616-ed5df11f46ee)
 Snax is a powerful and customizable Android Snackbar library built with Jetpack Compose. It offers sleek animations, swipe-to-dismiss functionality, and a variety of styling options to enhance the user experience.
 
-### 🚀 Features
-- 🔥 Beautiful and customizable Snackbars
-- 🎨 Custom themes, colors, and icons
-- 🏗️ Easy-to-use API for quick integration
-- ✨ Smooth animations with enter/exit transitions
-- 📦 Supports actions, dismiss behaviors, and progress indicators
-- 🎉 No `SnackbarHostState` is Needed, Place Snax easily in a `Box`
+### 🤔 Why Snax?  
+Unlike the default Jetpack Compose `Snackbar`, Snax offers:  
+- ✅ **No need for `SnackbarHostState`, Place Snax easily in a `Box`** (simplifies usage)  
+- 🎭 **Fully Customizable**  
+- 🔄 **Actions, swipe-to-dismiss, progress indicators, custom enter/exit transitions**  
+- 🎨 **Custom themes, colors, and icons**
+- 🏗️ **Easy-to-use API for quick integration**
+
+
 
 ### Demo
 | Action | Title | Dismissable | Progress |
 |--------|-------|------------|----------|
-| <img src="static/action.gif" width="200"/> | <img src="static/title.gif" width="200"/> | <img src="static/dissmisable.gif" width="200"/> | <img src="static/progress.gif" width="200"/> |
+| <p align="center"><img src="static/action.gif" width="220"/></p> | <p align="center"><img src="static/title.gif" width="220"/></p> | <p align="center"><img src="static/dismissable.gif" width="220"/></p> | <p align="center"><img src="static/progress.gif" width="220"/></p> |
 
 | Animation | Shape | Types |
 |-----------|-------|-------|
-| <img src="static/animation.gif" width="200"/> | <img src="static/shape.gif" width="200"/> | <img src="static/types.gif" width="200"/> |
+| <p align="center"><img src="static/animation.gif" width="220"/></p> | <p align="center"><img src="static/shape.gif" width="220"/></p> | <p align="center"><img src="static/types.gif" width="220"/></p> |
 
 
 ‌‌
@@ -62,7 +64,17 @@ snaxState.setData(
 
 ### Integrate with UI
 ```kt
-Snax(state = snaxState)
+Box(
+    modifier = Modifier
+        .fillMaxSize()
+        .background(MaterialTheme.colorScheme.background)
+        .padding(16.dp)
+) {
+    Snax(
+        state = snaxState,
+        modifier = Modifier.align(Alignment.BottomCenter)
+    )
+}
 ```
 ‌‌
 ‌‌
@@ -99,6 +111,7 @@ Snax(
             fontFamily = customFontFamily,
             fontWeight = FontWeight.Medium
         )
+)
 ```
 
 ‌‌
