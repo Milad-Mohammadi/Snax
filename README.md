@@ -42,13 +42,14 @@ Unlike the default Jetpack Compose `Snackbar`, Snax offers:
   </tr>
 
 </table>
+‌
+</br>‌
+</br>‌
 
-
-‌‌
-‌‌
-‌‌
 ## 📦 Installation
+
 To integrate Snax into your project, add the following dependency to your `build.gradle` (Module-level):
+
 ```kts
 repositories {
     mavenCentral()
@@ -58,15 +59,14 @@ dependencies {
   implementation("com.vimilad:Snax:1.0.1")
 }
 ```
-
-‌‌
-‌‌
-‌‌
+</br>‌
+</br>‌‌
 ## 🛠 Usage
 ### Initialize Snax State
 ```kt
 val snaxState = rememberSnaxState()
 ```
+
 ### Display a Simple Snackbar
 ```kt
 snaxState.setData(
@@ -74,6 +74,7 @@ snaxState.setData(
     message = "Your action was successful!"
 )
 ```
+
 ### Display a Snackbar with Action
 ```kt
 snaxState.setData(
@@ -98,10 +99,10 @@ Box(
     )
 }
 ```
-‌‌
-‌‌
-‌‌
+</br>‌
+</br>‌‌
 ## 🎨 Customize Snax component
+
 ```kt
 Snax(
     state = snaxState,
@@ -135,10 +136,9 @@ Snax(
         )
 )
 ```
-
-‌‌
-‌‌
-‌‌
+</br>‌
+</br>‌
+‌
 ## Show a custom Snax
 ```kt
 snaxState.setData(
@@ -151,9 +151,9 @@ snaxState.setData(
     message = "Custom Snackbar!"
 )
 ```
-
-‌‌
-‌‌
+</br>‌
+</br>‌
+‌
 ## 📖 Components & API Reference
 
 | Component | Description |
@@ -213,28 +213,25 @@ snaxState.setData(
 | `WARNING` | Warning message. |
 | `CUSTOM` | User-defined styling. |
 
-
-‌‌
-‌‌
-‌
+</br>‌
+</br>‌‌
 ## 📝 License
 This project is licensed under the Apache License 2.0. See the [LICENSE](LICENSE) file for more details.
 
-‌‌
-‌‌
-‌‌
+</br>‌
+</br>‌
+‌
 ## 🤝 Contributions
 Contributions, issues, and feature requests are welcome! Feel free to check the [issues](https://github.com/Milad-Mohammadi/Snax/issues) page and submit pull requests.
 
-‌‌
-‌‌
-‌‌
-‌
+</br>‌
+</br>‌
+
 ## 📬 Contact
 For any inquiries, feel free to reach out via Mohammadi.Dev@gmail.com.
 
-‌‌
-‌‌
-‌‌
+</br>‌
+</br>‌
+‌
 ## ©️ Credit
 This library is inspired by the [Animated Toast - Fully Editable design on Figma](https://www.figma.com/community/file/1276793899870578167/animated-toast-fully-editable),
