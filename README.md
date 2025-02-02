@@ -15,11 +15,11 @@ Unlike the default Jetpack Compose `Snackbar`, Snax offers:
 ### Demo
 | Action | Title | Dismissable | Progress |
 |--------|-------|------------|----------|
-| <p align="center"><img src="static/action.gif" width="220"/></p> | <p align="center"><img src="static/title.gif" width="220"/></p> | <p align="center"><img src="static/dismissable.gif" width="220"/></p> | <p align="center"><img src="static/progress.gif" width="220"/></p> |
+| <img src="static/action.gif" width="220"/> | <img src="static/title.gif" width="220"/> | <img src="static/dismissable.gif" width="220"/> | <img src="static/progress.gif" width="220"/> |
 
 | Animation | Shape | Types |
 |-----------|-------|-------|
-| <p align="center"><img src="static/animation.gif" width="220"/></p> | <p align="center"><img src="static/shape.gif" width="220"/></p> | <p align="center"><img src="static/types.gif" width="220"/></p> |
+| <img src="static/animation.gif" width="220"/> | <img src="static/shape.gif" width="220"/> | <img src="static/types.gif" width="220"/> |
 
 
 ‌‌
