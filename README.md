@@ -58,7 +58,7 @@ repositories {
 }
 
 dependencies {
-  implementation("com.vimilad:Snax:1.0.1")
+  implementation("com.vimilad:Snax:1.1.0")
 }
 ```
 </br>‌
@@ -115,6 +115,8 @@ Snax(
     animationEnter = slideInVertically(initialOffsetY = { it }) + scaleIn(initialScale = 0.8f),
     animationExit = slideOutVertically(targetOffsetY = { it }) + scaleOut(targetScale = 0.8f),
     duration = 6000L,
+    shadow = 2.dp,
+    shadowColor = Color.Black,
     titleStyle = MaterialTheme
         .typography
         .titleLarge
@@ -187,6 +189,8 @@ snaxState.setData(
 | `titleStyle: TextStyle` | Customizes title text style. |
 | `messageStyle: TextStyle` | Customizes message text style. |
 | `buttonTextStyle: TextStyle` | Customizes button text style. |
+| `shadow: Dp` | Defines the Snackbar shadow size. |
+| `shadowColor: Color` |  Defines the Snackbar shadow color. |
 | `duration: Long` | Controls visibility duration. |
 
 ### `DismissBehavior` Options
