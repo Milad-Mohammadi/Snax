@@ -6,9 +6,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 
 /**
- * Manages the state of the Snax snack bar.
+ * Manages the state of the Snax Snackbar.
  *
- * @property data The current data being displayed by the snack bar.
+ * @property data The current data being displayed by the Snackbar.
  * @property updateState Tracks changes in the state to trigger recomposition.
  *
  * @author Milad Mohammadi
@@ -25,11 +25,11 @@ class SnaxState {
         private set
 
     /**
-     * Updates the snack bar data and toggles the update state.
+     * Updates the Snackbar data and toggles the update state.
      *
-     * @param type The type of the snack bar.
+     * @param type The type of the Snackbar.
      * @param message The main message to display.
-     * @param title An optional title for the snack bar.
+     * @param title An optional title for the Snackbar.
      * @param actionTitle An optional title for the action button.
      * @param action An optional action to execute when the action button is clicked.
      */

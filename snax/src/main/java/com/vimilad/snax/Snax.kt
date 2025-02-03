@@ -6,8 +6,8 @@ import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
@@ -84,8 +84,8 @@ fun rememberSnaxState(): SnaxState {
 fun Snax(
     state: SnaxState,
     modifier: Modifier = Modifier,
-    animationEnter: EnterTransition = fadeIn() + slideInVertically(initialOffsetY = { it / 2 }),
-    animationExit: ExitTransition = fadeOut() + slideOutVertically(targetOffsetY = { it / 2 }),
+    animationEnter: EnterTransition = slideInVertically(initialOffsetY = { it }) + scaleIn(initialScale = 0.8f),
+    animationExit: ExitTransition = slideOutVertically(targetOffsetY = { it }) + scaleOut(targetScale = 0.8f),
     shape: Shape = RoundedCornerShape(8.dp),
     progressStyle: ProgressStyle = ProgressStyle.LINEAR,
     dismissBehavior: DismissBehavior = DismissBehavior.NOT_DISMISSABLE,
