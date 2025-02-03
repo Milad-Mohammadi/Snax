@@ -41,19 +41,21 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 /**
- * Remembers the state for managing a Snax snack bar.
+ * Remembers the state for managing a Snax Snackbar.
  * @return A new or existing [SnaxState].
  */
 @Composable
@@ -62,19 +64,21 @@ fun rememberSnaxState(): SnaxState {
 }
 
 /**
- * Composable function to display a customizable snack bar using Snax.
+ * Composable function to display a customizable Snackbar using Snax.
  *
- * @param state The [SnaxState] managing the snack bar's data.
+ * @param state The [SnaxState] managing the Snackbar's data.
  * @param modifier Modifier for styling.
- * @param animationEnter The enter animation for the snack bar.
- * @param animationExit The exit animation for the snack bar.
- * @param shape The shape of the snack bar.
+ * @param animationEnter The enter animation for the Snackbar.
+ * @param animationExit The exit animation for the Snackbar.
+ * @param shape The shape of the Snackbar.
  * @param progressStyle The style of the progress indicator.
- * @param dismissBehavior The behavior for dismissing the snack bar.
+ * @param dismissBehavior The behavior for dismissing the Snackbar.
  * @param titleStyle The text style for the title.
  * @param messageStyle The text style for the message.
  * @param buttonTextStyle The text style for the button text.
- * @param duration The duration the snack bar remains visible.
+ * @param shadow The shadow size of the Snackbar.
+ * @param shadowColor The shadow color of the Snackbar.
+ * @param duration The duration the Snackbar remains visible.
  */
 @Composable
 fun Snax(
@@ -88,6 +92,8 @@ fun Snax(
     titleStyle: TextStyle = MaterialTheme.typography.titleLarge,
     messageStyle: TextStyle = MaterialTheme.typography.bodyMedium,
     buttonTextStyle: TextStyle = MaterialTheme.typography.labelLarge,
+    shadow: Dp = 8.dp,
+    shadowColor: Color = Color.Black.copy(0.8f),
     duration: Long = 3000L
 ) {
     val layoutDirection = LocalLayoutDirection.current
@@ -161,7 +167,12 @@ fun Snax(
         ) {
             Box(
                 modifier = Modifier
-                    .clip(shape)
+                    .shadow(
+                        elevation = shadow,
+                        shape = shape,
+                        spotColor = shadowColor
+                    )
+                    .clip(shape = shape)
                     .background(color = backgroundColor)
             ) {
                 Row(
@@ -259,7 +270,7 @@ fun Snax(
     }
 }
 
-// Predefined color constants for the Snax snack bar.
+// Predefined color constants for the Snax Snackbar.
 private val ColorBackground = Color(0xFF242C32)
 private val ColorPrimary = Color(0xFF1C54D4)
 private val ColorRed = Color(0xFFF04349)
