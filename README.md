@@ -23,10 +23,10 @@ Unlike the default Jetpack Compose `Snackbar`, Snax offers:
   </tr>
 
   <tr>
-    <td><img src="static/action.gif" width="180"/></td>
-    <td><img src="static/title.gif" width="180"/></td>
-    <td><img src="static/dismissable.gif" width="180"/></td>
-    <td><img src="static/progress.gif" width="180"/></td>
+    <td><img src="static/action.gif" width="200"/></td>
+    <td><img src="static/title.gif" width="200"/></td>
+    <td><img src="static/dismissable.gif" width="200"/></td>
+    <td><img src="static/progress.gif" width="200"/></td>
   </tr>
 
   <tr>
@@ -36,9 +36,9 @@ Unlike the default Jetpack Compose `Snackbar`, Snax offers:
   </tr>
 
   <tr>
-    <td><img src="static/animation.gif" width="180"/></td>
-    <td><img src="static/shape.gif" width="180"/></td>
-    <td><img src="static/types.gif" width="180"/></td>
+    <td><img src="static/animation.gif" width="200"/></td>
+    <td><img src="static/shape.gif" width="200"/></td>
+    <td><img src="static/types.gif" width="200"/></td>
   </tr>
 
 </table>
