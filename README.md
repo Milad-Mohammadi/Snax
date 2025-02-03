@@ -33,12 +33,14 @@ Unlike the default Jetpack Compose `Snackbar`, Snax offers:
     <td><b>Animation</b></td>
     <td><b>Shape</b></td>
     <td><b>Types</b></td>
+    <td><b>Shadow</b></td>
   </tr>
 
   <tr>
     <td><img src="static/animation.gif" width="170"/></td>
     <td><img src="static/shape.gif" width="170"/></td>
     <td><img src="static/types.gif" width="170"/></td>
+    <td><img src="static/shadow.gif" width="170"/></td>
   </tr>
 
 </table>
