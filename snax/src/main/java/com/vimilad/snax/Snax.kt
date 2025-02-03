@@ -44,8 +44,10 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -88,6 +90,8 @@ fun Snax(
     buttonTextStyle: TextStyle = MaterialTheme.typography.labelLarge,
     duration: Long = 3000L
 ) {
+    val layoutDirection = LocalLayoutDirection.current
+
     var showSnax by remember { mutableStateOf(false) }
     val data by rememberUpdatedState(newValue = state.data.value)
     val type = data?.type
@@ -96,6 +100,20 @@ fun Snax(
     val progress = remember { Animatable(1f) }
     val animateProgress = progressStyle == ProgressStyle.LINEAR || progressStyle == ProgressStyle.SYMMETRIC
     val scope = rememberCoroutineScope()
+    val colors = listOf(
+        when (type) {
+            SnaxType.ERROR -> ColorRed.copy(0.3f)
+            SnaxType.INFO -> ColorPrimary.copy(0.3f)
+            SnaxType.SUCCESS -> ColorGreen.copy(0.3f)
+            SnaxType.WARNING -> ColorYellow.copy(0.3f)
+            is SnaxType.CUSTOM -> type.overlayColor
+            null -> ColorYellow.copy(0.3f)
+        },
+        Color.Transparent,
+        Color.Transparent
+    )
+    val finalColors = if (layoutDirection == LayoutDirection.Rtl) colors.reversed() else colors
+
 
     val dismissState = rememberSwipeToDismissBoxState(
         confirmValueChange = { newValue ->
@@ -150,22 +168,7 @@ fun Snax(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
                         .clip(shape = shape)
-                        .background(
-                            brush = Brush.horizontalGradient(
-                                listOf(
-                                    when (type) {
-                                        SnaxType.ERROR -> ColorRed.copy(0.3f)
-                                        SnaxType.INFO -> ColorPrimary.copy(0.3f)
-                                        SnaxType.SUCCESS -> ColorGreen.copy(0.3f)
-                                        SnaxType.WARNING -> ColorYellow.copy(0.3f)
-                                        is SnaxType.CUSTOM -> type.overlayColor
-                                        null -> ColorYellow.copy(0.3f)
-                                    },
-                                    Color.Transparent,
-                                    Color.Transparent,
-                                )
-                            )
-                        )
+                        .background(brush = Brush.horizontalGradient(finalColors))
                         .padding(horizontal = 16.dp, vertical = 16.dp)
                 ) {
                     Icon(
