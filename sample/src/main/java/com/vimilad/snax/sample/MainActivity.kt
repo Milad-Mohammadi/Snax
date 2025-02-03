@@ -293,16 +293,16 @@ class MainActivity : AppCompatActivity() {
                                 else -> RoundedCornerShape(20.dp)
                             },
                             animationEnter = when (animation) {
-                                AnimationType.DEFAULT -> fadeIn() + slideInVertically(initialOffsetY = { it / 2 })
-                                AnimationType.SLIDE_AND_SCALE -> slideInVertically(initialOffsetY = { it }) + scaleIn(initialScale = 0.8f)
+                                AnimationType.DEFAULT -> slideInVertically(initialOffsetY = { it }) + scaleIn(initialScale = 0.8f)
+                                AnimationType.SLIDE_AND_FADE -> fadeIn() + slideInVertically(initialOffsetY = { it / 2 })
                                 AnimationType.EXPAND_AND_CONTRACT -> expandVertically(
                                     expandFrom = Alignment.Top,
                                     animationSpec = spring(stiffness = Spring.StiffnessMedium)
                                 ) + fadeIn()
                             },
                             animationExit = when (animation) {
-                                AnimationType.DEFAULT -> fadeOut() + slideOutVertically(targetOffsetY = { it / 2 })
-                                AnimationType.SLIDE_AND_SCALE -> slideOutVertically(targetOffsetY = { it }) + scaleOut(targetScale = 0.8f)
+                                AnimationType.DEFAULT -> slideOutVertically(targetOffsetY = { it }) + scaleOut(targetScale = 0.8f)
+                                AnimationType.SLIDE_AND_FADE -> fadeOut() + slideOutVertically(targetOffsetY = { it / 2 })
                                 AnimationType.EXPAND_AND_CONTRACT -> shrinkVertically(
                                     shrinkTowards = Alignment.Top,
                                     animationSpec = spring(stiffness = Spring.StiffnessLow)
