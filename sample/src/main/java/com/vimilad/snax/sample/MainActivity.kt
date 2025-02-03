@@ -56,6 +56,7 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.vimilad.snax.DismissBehavior
@@ -84,6 +85,8 @@ class MainActivity : AppCompatActivity() {
                 val shapes = listOf("default", "circle", "rectangle", "rounded")
                 val durations = listOf("3", "5", "10", "15", "20")
                 val types = listOf("Success", "Error", "Warning", "Info", "Custom", "Custom (RTL)")
+                val shadows = listOf("2", "4", "8", "16", "32", "64")
+                val shadowColors = listOf("Default", "Black", "Red", "Green", "Blue", "Yellow")
 
                 val snaxState = rememberSnaxState()
                 var showTitle by remember { mutableStateOf(false) }
@@ -95,6 +98,8 @@ class MainActivity : AppCompatActivity() {
                 var duration  by remember { mutableStateOf(durations.first()) }
                 val action = if (actionRequired) ({}) else null
                 var type by remember { mutableStateOf(types.first()) }
+                var shadow by remember { mutableStateOf(shadows.first()) }
+                var shadowColor by remember { mutableStateOf(shadowColors.first()) }
                 var rtl by remember { mutableStateOf(false) }
 
                 Box(
@@ -197,6 +202,22 @@ class MainActivity : AppCompatActivity() {
                                 onSelected = { type = it },
                                 modifier = Modifier.weight(1f)
                             )
+
+                            ItemSelector(
+                                title = "Shadow",
+                                items = shadows,
+                                currentItem = shadow,
+                                onSelected = { shadow = it },
+                                modifier = Modifier.weight(1f)
+                            )
+
+                            ItemSelector(
+                                title = "Shadow Color",
+                                items = shadowColors,
+                                currentItem = shadowColor,
+                                onSelected = { shadowColor = it },
+                                modifier = Modifier.weight(1f)
+                            )
                         }
 
                         Button(
@@ -286,6 +307,15 @@ class MainActivity : AppCompatActivity() {
                                     shrinkTowards = Alignment.Top,
                                     animationSpec = spring(stiffness = Spring.StiffnessLow)
                                 ) + fadeOut()
+                            },
+                            shadow = Dp(shadow.toFloat()),
+                            shadowColor = when (shadowColor) {
+                                shadowColors[0] -> Color.Black.copy(0.8f)
+                                shadowColors[1] -> Color.Black
+                                shadowColors[2] -> Color.Red
+                                shadowColors[3] -> Color.Green
+                                shadowColors[4] -> Color.Blue
+                                else -> Color.Yellow
                             },
                             duration = duration.toInt().times(1000).toLong(),
                             titleStyle = MaterialTheme
