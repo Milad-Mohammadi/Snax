@@ -2,7 +2,7 @@ package com.vimilad.snax
 
 
 /**
- * Defines the styles of progress indicator that can be displayed in the snack bar.
+ * Defines the styles of progress indicator that can be displayed in the Snackbar.
  *
  * @author Milad Mohammadi
  */
