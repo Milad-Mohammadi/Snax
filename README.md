@@ -1,4 +1,5 @@
 ![Maven Central Version](https://img.shields.io/maven-central/v/com.vimilad/Snax)
+![GitHub Repo stars](https://img.shields.io/github/stars/Milad-Mohammadi/Snax)
 ![banner](https://github.com/user-attachments/assets/01329c82-8f4a-445c-b616-ed5df11f46ee)
 Snax is a powerful and customizable Android Snackbar library built with Jetpack Compose. It offers sleek animations, swipe-to-dismiss functionality, and a variety of styling options to enhance the user experience.
 
