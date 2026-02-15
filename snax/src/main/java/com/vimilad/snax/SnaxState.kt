@@ -32,6 +32,8 @@ class SnaxState {
      * @param title An optional title for the Snackbar.
      * @param actionTitle An optional title for the action button.
      * @param action An optional action to execute when the action button is clicked.
+     * @param duration The duration in milliseconds for which the Snackbar remains visible.
+     * @param onDismiss Callback invoked when the Snackbar is dismissed, with a boolean indicating if dismissed by user.
      */
     fun setData(
         type: SnaxType,
@@ -39,13 +41,17 @@ class SnaxState {
         title: String? = null,
         actionTitle: String? = null,
         action: (() -> Unit)? = null,
+        duration: Long = 3000L,
+        onDismiss: ((dismissedByUser: Boolean) -> Unit)? = null,
     ) {
         _data.value = SnaxData(
             type = type,
             message = message,
             title = title,
             actionTitle = actionTitle,
-            action = action
+            action = action,
+            duration = duration,
+            onDismiss = onDismiss
         )
         updateState = !updateState
     }
