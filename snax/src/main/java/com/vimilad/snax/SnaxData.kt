@@ -8,7 +8,8 @@ package com.vimilad.snax
  * @param title An optional title for the Snackbar.
  * @param actionTitle An optional title for the action button.
  * @param action An optional action to execute when the action button is clicked.
- *
+ * @param duration The duration in milliseconds for which the Snackbar remains visible.
+ * @param onDismiss Callback invoked when the Snackbar is dismissed, with a boolean indicating if dismissed by user.
  * @author Milad Mohammadi
  */
 data class SnaxData(
@@ -17,4 +18,6 @@ data class SnaxData(
     val title: String? = null,
     val actionTitle: String? = null,
     val action: (() -> Unit)? = null,
+    val duration: Long = 3000L,
+    val onDismiss: ((dismissedByUser: Boolean) -> Unit)? = null,
 )

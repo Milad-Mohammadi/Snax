@@ -14,5 +14,15 @@ enum class DismissBehavior {
     /**
      * The Snackbar can be dismissed by swiping horizontally.
      */
-    SWIPE_HORIZONTAL
+    SWIPE_HORIZONTAL,
+
+    /**
+     * The Snackbar can be dismissed by clicking outside of it.
+     */
+    CLICK_OUTSIDE,
+
+    /**
+     * The Snackbar can be dismissed by both swiping horizontally and clicking outside.
+     */
+    SWIPE_AND_CLICK
 }

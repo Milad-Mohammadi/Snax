@@ -32,6 +32,11 @@ sealed class SnaxType {
     data object WARNING : SnaxType()
 
     /**
+     * Represents a loading type Snackbar.
+     */
+    data object LOADING : SnaxType()
+
+    /**
      * Represents a custom type Snackbar with user-defined properties.
      *
      * @param icon The resource ID of the icon to display.
