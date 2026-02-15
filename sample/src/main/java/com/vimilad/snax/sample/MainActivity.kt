@@ -1,6 +1,7 @@
 package com.vimilad.snax.sample
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.animation.core.Spring
@@ -41,6 +42,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -84,18 +86,19 @@ class MainActivity : AppCompatActivity() {
                 val booleanPair = listOf("No", "Yes")
                 val shapes = listOf("default", "circle", "rectangle", "rounded")
                 val durations = listOf("3", "5", "10", "15", "20")
-                val types = listOf("Success", "Error", "Warning", "Info", "Custom", "Custom (RTL)")
+                val types = listOf("Success", "Error", "Warning", "Info", "Loading", "Custom", "Custom (RTL)")
                 val shadows = listOf("2", "4", "8", "16", "32", "64")
                 val shadowColors = listOf("Default", "Black", "Red", "Green", "Blue", "Yellow")
+                val dismissBehaviors = listOf("None", "Swipe", "Click", "Both")
 
                 val snaxState = rememberSnaxState()
                 var showTitle by remember { mutableStateOf(false) }
                 var actionRequired by remember { mutableStateOf(false) }
-                var isDismissable by remember { mutableStateOf(false) }
+                var dismissBehaviorIndex by remember { mutableIntStateOf(0) }
                 var progressStyle by remember { mutableStateOf(ProgressStyle.LINEAR) }
                 var animation by remember { mutableStateOf(AnimationType.DEFAULT) }
                 var shape by remember { mutableStateOf(shapes.first()) }
-                var duration  by remember { mutableStateOf(durations.first()) }
+                var duration by remember { mutableStateOf(durations.first()) }
                 val action = if (actionRequired) ({}) else null
                 var type by remember { mutableStateOf(types.first()) }
                 var shadow by remember { mutableStateOf(shadows.first()) }
@@ -156,10 +159,10 @@ class MainActivity : AppCompatActivity() {
                             )
 
                             ItemSelector(
-                                title = "Can Dismiss",
-                                items = booleanPair,
-                                currentItem = if (isDismissable) booleanPair.last() else booleanPair.first(),
-                                onSelected = { isDismissable = it == booleanPair.last() },
+                                title = "Dismiss Behavior",
+                                items = dismissBehaviors,
+                                currentItem = dismissBehaviors[dismissBehaviorIndex],
+                                onSelected = { dismissBehaviorIndex = dismissBehaviors.indexOf(it) },
                                 modifier = Modifier.weight(1f)
                             )
 
@@ -230,15 +233,16 @@ class MainActivity : AppCompatActivity() {
                                         types[1] -> SnaxType.ERROR
                                         types[2] -> SnaxType.WARNING
                                         types[3] -> SnaxType.INFO
-                                        types[4] -> SnaxType.CUSTOM(
+                                        types[4] -> SnaxType.LOADING
+                                        types[5] -> SnaxType.CUSTOM(
                                             icon = R.drawable.vimilad_logo,
-                                            backgroundColor =  Color(0XFFB28D8D),
+                                            backgroundColor = Color(0XFFB28D8D),
                                             overlayColor = Color(0XFF613DC1),
                                             contentColor = Color(0xFFE1E1E1)
                                         )
                                         else -> SnaxType.CUSTOM(
                                             icon = R.drawable.ic_backup,
-                                            backgroundColor =  Color(0xFFE1E1E1),
+                                            backgroundColor = Color(0xFFE1E1E1),
                                             overlayColor = Color(0xFFE1E1E1),
                                             contentColor = Color(0xFF0E0E0E),
                                             progressColor = Color(0xFF0E0E0E)
@@ -250,7 +254,8 @@ class MainActivity : AppCompatActivity() {
                                             types[1] -> "Payment Failed"
                                             types[2] -> "Low Storage"
                                             types[3] -> "New Update Available"
-                                            types[4] -> "Vimilad.com"
+                                            types[4] -> "Processing"
+                                            types[5] -> "Vimilad.com"
                                             else -> "پشتیبان\u200Cگیری"
                                         } else null,
                                     message = when (type) {
@@ -258,7 +263,8 @@ class MainActivity : AppCompatActivity() {
                                         types[1] -> "Payment failed. Please try again or contact support."
                                         types[2] -> "Your device is low on storage. Free up space for better performance."
                                         types[3] -> "A new app update is available. Please update to enjoy new features."
-                                        types[4] -> "Check my website for more projects."
+                                        types[4] -> "Please wait while we process your request..."
+                                        types[5] -> "Check my website for more projects."
                                         else -> "برای جلوگیری از از\u200Cدست\u200Cرفتن داده\u200Cها، پشتیبان\u200Cگیری را به\u200Cصورت منظم انجام دهید."
                                     },
                                     actionTitle = when (type) {
@@ -266,10 +272,19 @@ class MainActivity : AppCompatActivity() {
                                         types[1] -> "Support"
                                         types[2] -> "Settings"
                                         types[3] -> "Update"
-                                        types[4] -> "Visit"
+                                        types[4] -> null // Loading doesn't need action button
+                                        types[5] -> "Visit"
                                         else -> "پشتیبان\u200Cگیری"
                                     },
-                                    action = action
+                                    action = if (type == types[4]) null else action, // Loading doesn't need action
+                                    duration = duration.toInt().times(1000).toLong(),
+                                    onDismiss = { dismissedByUser ->
+                                        Log.d(
+                                            "Snax",
+                                            if (dismissedByUser) "Snackbar dismissed by user"
+                                            else "Snackbar auto-dismissed (timeout)"
+                                        )
+                                    }
                                 )
                             },
                             content = {
@@ -283,17 +298,24 @@ class MainActivity : AppCompatActivity() {
                     ) {
                         Snax(
                             state = snaxState,
-                            modifier = Modifier.align(Alignment.BottomCenter),
+                            modifier = Modifier.align(Alignment.TopCenter),
                             progressStyle = progressStyle,
-                            dismissBehavior = if (isDismissable) DismissBehavior.SWIPE_HORIZONTAL else DismissBehavior.NOT_DISMISSABLE,
-                            shape = when(shape) {
+                            dismissBehavior = when (dismissBehaviorIndex) {
+                                0 -> DismissBehavior.NOT_DISMISSABLE
+                                1 -> DismissBehavior.SWIPE_HORIZONTAL
+                                2 -> DismissBehavior.CLICK_OUTSIDE
+                                else -> DismissBehavior.SWIPE_AND_CLICK
+                            },
+                            shape = when (shape) {
                                 shapes[0] -> RoundedCornerShape(8.dp)
                                 shapes[1] -> CircleShape
                                 shapes[2] -> RectangleShape
                                 else -> RoundedCornerShape(20.dp)
                             },
                             animationEnter = when (animation) {
-                                AnimationType.DEFAULT -> slideInVertically(initialOffsetY = { it }) + scaleIn(initialScale = 0.8f)
+                                AnimationType.DEFAULT -> slideInVertically(initialOffsetY = { it }) + scaleIn(
+                                    initialScale = 0.8f
+                                )
                                 AnimationType.SLIDE_AND_FADE -> fadeIn() + slideInVertically(initialOffsetY = { it / 2 })
                                 AnimationType.EXPAND_AND_CONTRACT -> expandVertically(
                                     expandFrom = Alignment.Top,
@@ -301,7 +323,9 @@ class MainActivity : AppCompatActivity() {
                                 ) + fadeIn()
                             },
                             animationExit = when (animation) {
-                                AnimationType.DEFAULT -> slideOutVertically(targetOffsetY = { it }) + scaleOut(targetScale = 0.8f)
+                                AnimationType.DEFAULT -> slideOutVertically(targetOffsetY = { it }) + scaleOut(
+                                    targetScale = 0.8f
+                                )
                                 AnimationType.SLIDE_AND_FADE -> fadeOut() + slideOutVertically(targetOffsetY = { it / 2 })
                                 AnimationType.EXPAND_AND_CONTRACT -> shrinkVertically(
                                     shrinkTowards = Alignment.Top,
@@ -317,7 +341,6 @@ class MainActivity : AppCompatActivity() {
                                 shadowColors[4] -> Color.Blue
                                 else -> Color.Yellow
                             },
-                            duration = duration.toInt().times(1000).toLong(),
                             titleStyle = MaterialTheme
                                 .typography
                                 .titleLarge

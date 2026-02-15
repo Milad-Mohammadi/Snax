@@ -169,122 +169,54 @@ fun Snax(
         }
     }
 
-    Box(modifier = modifier) {
-        // Clickable background for dismissing
-        if (showSnax && canDismissByClick) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .clickable(
-                        indication = null,
-                        interactionSource = remember { MutableInteractionSource() }
-                    ) {
-                        dismissedByUser = true
-                        showSnax = false
-                    }
-            )
-        }
-
-        SwipeToDismissBox(
-            state = dismissState,
-            modifier = Modifier,
-            gesturesEnabled = canDismissBySwipe,
-            backgroundContent = {},
-        ) {
-            AnimatedVisibility(
-                visible = showSnax,
-                enter = animationEnter,
-                exit = animationExit,
-            ) {
+    // When click-outside is enabled, handle the full-screen overlay
+    if (canDismissByClick) {
+        Box(modifier = Modifier.fillMaxSize()) {
+            // Clickable background overlay
+            if (showSnax) {
                 Box(
                     modifier = Modifier
-                        .shadow(
-                            elevation = shadow,
-                            shape = shape,
-                            spotColor = shadowColor
-                        )
-                        .clip(shape = shape)
-                        .background(color = backgroundColor)
+                        .fillMaxSize()
                         .clickable(
                             indication = null,
                             interactionSource = remember { MutableInteractionSource() }
-                        ) { /* Prevent clicks from passing through */ }
-                ) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier
-                            .clip(shape = shape)
-                            .background(brush = Brush.horizontalGradient(finalColors))
-                            .padding(horizontal = 16.dp, vertical = 16.dp)
-                    ) {
-                        if (type == SnaxType.LOADING) {
-                            CircularProgressIndicator(
-                                modifier = Modifier
-                                    .size(34.dp)
-                                    .padding(4.dp),
-                                color = contentColor,
-                                strokeWidth = 3.dp
-                            )
-                        } else {
-                            Icon(
-                                painter = painterResource(
-                                    id = when (type) {
-                                        SnaxType.ERROR -> R.drawable.ic_cross_circle_fill
-                                        SnaxType.INFO -> R.drawable.ic_info_circle_fill
-                                        SnaxType.SUCCESS -> R.drawable.ic_tick_circle_fill
-                                        SnaxType.WARNING -> R.drawable.ic_warning_fill
-                                        is SnaxType.CUSTOM -> type.icon
-                                        else -> R.drawable.ic_info_circle_fill
-                                    }
-                                ),
-                                contentDescription = null,
-                                tint = contentColor,
-                                modifier = Modifier
-                                    .size(34.dp)
-                                    .clip(CircleShape)
-                                    .background(contentColor.copy(0.1f))
-                                    .padding(4.dp)
-                            )
-                        }
-
-                        Spacer(modifier = Modifier.width(8.dp))
-
-                        Column(
-                            modifier = Modifier.weight(1f)
                         ) {
-                            data?.title?.let { title ->
-                                Text(
-                                    text = title,
-                                    color = contentColor,
-                                    style = titleStyle,
-                                )
-                            }
-
-                            Text(
-                                text = data?.message.orEmpty(),
-                                color = contentColor,
-                                style = messageStyle,
-                            )
+                            dismissedByUser = true
+                            showSnax = false
                         }
+                )
+            }
 
-                        data?.action?.let { action ->
-                            TextButton(
-                                onClick = {
-                                    dismissedByUser = true
-                                    showSnax = false
-                                    action()
-                                }
-                            ) {
-                                Text(
-                                    text = data?.actionTitle.orEmpty(),
-                                    color = contentColor,
-                                    style = buttonTextStyle
-                                )
-                            }
-                        }
-                    }
-
-                    val progressColor = when (type) {
+            // Snackbar content positioned at bottom center
+            SwipeToDismissBox(
+                state = dismissState,
+                modifier = modifier,
+                gesturesEnabled = canDismissBySwipe,
+                backgroundContent = {},
+            ) {
+                SnackbarContent(
+                    showSnax = showSnax,
+                    animationEnter = animationEnter,
+                    animationExit = animationExit,
+                    shadow = shadow,
+                    shape = shape,
+                    shadowColor = shadowColor,
+                    backgroundColor = backgroundColor,
+                    finalColors = finalColors,
+                    type = type,
+                    contentColor = contentColor,
+                    data = data,
+                    titleStyle = titleStyle,
+                    messageStyle = messageStyle,
+                    action = data?.action,
+                    dismissedByUser = {
+                        dismissedByUser = true
+                        showSnax = false
+                    },
+                    buttonTextStyle = buttonTextStyle,
+                    progressStyle = progressStyle,
+                    progress = progress.value,
+                    progressColor = when (type) {
                         SnaxType.ERROR -> ColorRed
                         SnaxType.INFO -> ColorPrimary
                         SnaxType.SUCCESS -> ColorGreen
@@ -293,25 +225,183 @@ fun Snax(
                         is SnaxType.CUSTOM -> type.progressColor ?: type.overlayColor
                         null -> ColorPrimary
                     }
+                )
+            }
+        }
+    } else {
+        // Normal behavior without click-outside
+        SwipeToDismissBox(
+            state = dismissState,
+            modifier = modifier,
+            gesturesEnabled = canDismissBySwipe,
+            backgroundContent = {},
+        ) {
+            SnackbarContent(
+                showSnax = showSnax,
+                animationEnter = animationEnter,
+                animationExit = animationExit,
+                shadow = shadow,
+                shape = shape,
+                shadowColor = shadowColor,
+                backgroundColor = backgroundColor,
+                finalColors = finalColors,
+                type = type,
+                contentColor = contentColor,
+                data = data,
+                titleStyle = titleStyle,
+                messageStyle = messageStyle,
+                action = data?.action,
+                dismissedByUser = {
+                    dismissedByUser = true
+                    showSnax = false
+                },
+                buttonTextStyle = buttonTextStyle,
+                progressStyle = progressStyle,
+                progress = progress.value,
+                progressColor = when (type) {
+                    SnaxType.ERROR -> ColorRed
+                    SnaxType.INFO -> ColorPrimary
+                    SnaxType.SUCCESS -> ColorGreen
+                    SnaxType.WARNING -> ColorYellow
+                    SnaxType.LOADING -> ColorBlue
+                    is SnaxType.CUSTOM -> type.progressColor ?: type.overlayColor
+                    null -> ColorPrimary
+                }
+            )
+        }
+    }
+}
 
-                    if (progressStyle != ProgressStyle.HIDDEN && type != SnaxType.LOADING) {
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .align(Alignment.BottomCenter),
-                            horizontalArrangement = when (progressStyle) {
-                                ProgressStyle.LINEAR -> Arrangement.Start
-                                else -> Arrangement.SpaceAround
+@Composable
+private fun SnackbarContent(
+    showSnax: Boolean,
+    animationEnter: EnterTransition,
+    animationExit: ExitTransition,
+    shadow: Dp,
+    shape: Shape,
+    shadowColor: Color,
+    backgroundColor: Color,
+    finalColors: List<Color>,
+    type: SnaxType?,
+    contentColor: Color,
+    data: SnaxData?,
+    titleStyle: TextStyle,
+    messageStyle: TextStyle,
+    action: (() -> Unit)?,
+    dismissedByUser: () -> Unit,
+    buttonTextStyle: TextStyle,
+    progressStyle: ProgressStyle,
+    progress: Float,
+    progressColor: Color
+) {
+    AnimatedVisibility(
+        visible = showSnax,
+        enter = animationEnter,
+        exit = animationExit,
+    ) {
+        Box(
+            modifier = Modifier
+                .shadow(
+                    elevation = shadow,
+                    shape = shape,
+                    spotColor = shadowColor
+                )
+                .clip(shape = shape)
+                .background(color = backgroundColor)
+                .clickable(
+                    indication = null,
+                    interactionSource = remember { MutableInteractionSource() }
+                ) { /* Prevent clicks from passing through */ }
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+                    .clip(shape = shape)
+                    .background(brush = Brush.horizontalGradient(finalColors))
+                    .padding(horizontal = 16.dp, vertical = 16.dp)
+            ) {
+                if (type == SnaxType.LOADING) {
+                    CircularProgressIndicator(
+                        modifier = Modifier
+                            .size(34.dp)
+                            .padding(4.dp),
+                        color = contentColor,
+                        strokeWidth = 3.dp
+                    )
+                } else {
+                    Icon(
+                        painter = painterResource(
+                            id = when (type) {
+                                SnaxType.ERROR -> R.drawable.ic_cross_circle_fill
+                                SnaxType.INFO -> R.drawable.ic_info_circle_fill
+                                SnaxType.SUCCESS -> R.drawable.ic_tick_circle_fill
+                                SnaxType.WARNING -> R.drawable.ic_warning_fill
+                                is SnaxType.CUSTOM -> type.icon
+                                else -> R.drawable.ic_info_circle_fill
                             }
-                        ) {
-                            Box(
-                                modifier = Modifier
-                                    .fillMaxWidth(progress.value)
-                                    .height(4.dp)
-                                    .background(progressColor)
-                            )
-                        }
+                        ),
+                        contentDescription = null,
+                        tint = contentColor,
+                        modifier = Modifier
+                            .size(34.dp)
+                            .clip(CircleShape)
+                            .background(contentColor.copy(0.1f))
+                            .padding(4.dp)
+                    )
+                }
+
+                Spacer(modifier = Modifier.width(8.dp))
+
+                Column(
+                    modifier = Modifier.weight(1f)
+                ) {
+                    data?.title?.let { title ->
+                        Text(
+                            text = title,
+                            color = contentColor,
+                            style = titleStyle,
+                        )
                     }
+
+                    Text(
+                        text = data?.message.orEmpty(),
+                        color = contentColor,
+                        style = messageStyle,
+                    )
+                }
+
+                action?.let {
+                    TextButton(
+                        onClick = {
+                            dismissedByUser()
+                            it()
+                        }
+                    ) {
+                        Text(
+                            text = data?.actionTitle.orEmpty(),
+                            color = contentColor,
+                            style = buttonTextStyle
+                        )
+                    }
+                }
+            }
+
+            if (progressStyle != ProgressStyle.HIDDEN && type != SnaxType.LOADING) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .align(Alignment.BottomCenter),
+                    horizontalArrangement = when (progressStyle) {
+                        ProgressStyle.LINEAR -> Arrangement.Start
+                        else -> Arrangement.SpaceAround
+                    }
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth(progress)
+                            .height(4.dp)
+                            .background(progressColor)
+                    )
                 }
             }
         }
