@@ -49,4 +49,11 @@ class SnaxState {
         )
         updateState = !updateState
     }
+
+    /**
+     * Clears the Snackbar data.
+     */
+    internal fun clearData() {
+        _data.value = null
+    }
 }
