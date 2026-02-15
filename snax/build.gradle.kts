@@ -46,7 +46,7 @@ mavenPublishing {
     coordinates(
         groupId = "com.vimilad",
         artifactId = "Snax",
-        version = "1.1.0"
+        version = "1.2.0"
     )
 
     pom {

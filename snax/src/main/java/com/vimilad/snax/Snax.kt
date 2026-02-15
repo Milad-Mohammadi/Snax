@@ -150,6 +150,7 @@ fun Snax(
             scope.launch {
                 delay(500)
                 dismissState.reset()
+                state.clearData() // Clear the data after animation completes
             }
         }
     }
