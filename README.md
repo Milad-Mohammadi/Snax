@@ -59,7 +59,7 @@ repositories {
 }
 
 dependencies {
-  implementation("com.vimilad:Snax:1.1.0")
+  implementation("com.vimilad:Snax:<latest-version>")
 }
 ```
 </br>‌
